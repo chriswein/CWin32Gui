@@ -2,7 +2,6 @@
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 // compile with "gcc win.c -o win.exe -mwindows -municode"
-;
 
 HWND window;
 HWND okbutton, cancelbutton, text;
