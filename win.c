@@ -4,20 +4,21 @@ void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 // compile with "gcc win.c -o win.exe -mwindows -municode"
 
 HWND window;
-HWND shiftRightButton,shiftLeftButton, cancelbutton, text;
+HWND shiftRightButton, shiftLeftButton, cancelbutton, text;
 
-void ShiftTextInTextfield(HWND textfield, int direction){
-        long outLength = GetWindowTextLengthW(textfield) + 1;
-        wchar_t *buffer = malloc(sizeof(wchar_t) * outLength);
+void ShiftTextInTextfield(HWND textfield, int direction)
+{
+    long outLength = GetWindowTextLengthW(textfield) + 1;
+    wchar_t *buffer = malloc(sizeof(wchar_t) * outLength);
 
-        GetWindowTextW(text, (LPWSTR)buffer, outLength);
+    GetWindowTextW(text, (LPWSTR)buffer, outLength);
 
-        for (size_t i = 0; i < outLength - 1; i++)
-        {
-            buffer[i] = (wchar_t)(buffer[i] + direction);
-        }
+    for (size_t i = 0; i < outLength - 1; i++)
+    {
+        buffer[i] = (wchar_t)(buffer[i] + direction);
+    }
 
-        SetWindowTextW(textfield, buffer);
+    SetWindowTextW(textfield, buffer);
 }
 
 RECT getWindowSize()
@@ -58,7 +59,7 @@ void initializeComponents(HWND m_hwnd)
     long offset_y = 151;
 
     shiftRightButton = createButton(L"Shift Right", width - offset, height - offset_y, 100l, 100l);
-    shiftLeftButton = createButton(L"Shift Left", width-offset-110l, height- offset_y, 100l,100l);
+    shiftLeftButton = createButton(L"Shift Left", width - offset - 110l, height - offset_y, 100l, 100l);
     cancelbutton = createButton(L"Close Application", width - offset + 10l + 100l, height - offset_y, 130l, 100l);
 
     text = CreateWindowW(
@@ -121,10 +122,11 @@ void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if ((HWND)lParam == shiftRightButton)
     {
-        ShiftTextInTextfield(text,1);
+        ShiftTextInTextfield(text, 1);
     }
-    if ((HWND)lParam == shiftLeftButton){
-        ShiftTextInTextfield(text,-1);
+    if ((HWND)lParam == shiftLeftButton)
+    {
+        ShiftTextInTextfield(text, -1);
     }
     if ((HWND)lParam == cancelbutton)
     {
