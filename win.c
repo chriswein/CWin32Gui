@@ -33,7 +33,7 @@ void init_components(HWND m_hwnd)
     RECT bounds = windowSize();
     long width = bounds.right - bounds.left;
     long height = bounds.bottom - bounds.top;
-    long offset = 290;
+    long offset = 300;
     long offset_y = 150;
 
     okbutton = createButton(L"Ok", width - offset, height - offset_y, 100l, 100l);
