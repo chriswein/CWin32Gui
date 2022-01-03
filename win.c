@@ -34,7 +34,7 @@ void init_components(HWND m_hwnd)
     long width = bounds.right - bounds.left;
     long height = bounds.bottom - bounds.top;
     long offset = 300;
-    long offset_y = 150;
+    long offset_y = 151;
 
     okbutton = createButton(L"Ok", width - offset, height - offset_y, 100l, 100l);
     cancelbutton = createButton(L"Close Application", width - offset + 10l + 100l, height - offset_y, 130l, 100l);
