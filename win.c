@@ -1,10 +1,10 @@
 #include <windows.h>
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-// compile with "gcc win.c -o win.exe -mwindows -municode"
 
 HWND window;
-HWND shiftRightButton, shiftLeftButton, cancelbutton, text;
+HWND shiftRightButton, shiftLeftButton, cancelButton, text;
 
 void ShiftTextInTextfield(HWND textfield, int direction)
 {
@@ -21,6 +21,9 @@ void ShiftTextInTextfield(HWND textfield, int direction)
     SetWindowTextW(textfield, buffer);
 }
 
+/*
+    Returns the bounds of the window.
+*/
 RECT getWindowSize()
 {
     LPRECT lpr = malloc(sizeof(LPRECT));
@@ -60,7 +63,7 @@ void initializeComponents(HWND m_hwnd)
 
     shiftRightButton = createButton(L"Shift Right", width - offset, height - offset_y, 100l, 100l);
     shiftLeftButton = createButton(L"Shift Left", width - offset - 110l, height - offset_y, 100l, 100l);
-    cancelbutton = createButton(L"Close Application", width - offset + 10l + 100l, height - offset_y, 130l, 100l);
+    cancelButton = createButton(L"Close Application", width - offset + 10l + 100l, height - offset_y, 130l, 100l);
 
     text = CreateWindowW(
         L"EDIT",
@@ -128,7 +131,7 @@ void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         ShiftTextInTextfield(text, -1);
     }
-    if ((HWND)lParam == cancelbutton)
+    if ((HWND)lParam == cancelButton)
     {
         PostQuitMessage(0);
     }
