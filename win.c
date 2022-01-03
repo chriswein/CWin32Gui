@@ -4,14 +4,32 @@ void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 // compile with "gcc win.c -o win.exe -mwindows -municode"
 
 HWND window;
-HWND okbutton, cancelbutton, text;
+HWND shiftRightButton,shiftLeftButton, cancelbutton, text;
 
-RECT windowSize()
+void ShiftTextInTextfield(HWND textfield, int direction){
+        long outLength = GetWindowTextLengthW(textfield) + 1;
+        wchar_t *buffer = malloc(sizeof(wchar_t) * outLength);
+
+        GetWindowTextW(text, (LPWSTR)buffer, outLength);
+
+        for (size_t i = 0; i < outLength - 1; i++)
+        {
+            buffer[i] = (wchar_t)(buffer[i] + direction);
+        }
+
+        SetWindowTextW(textfield, buffer);
+}
+
+RECT getWindowSize()
 {
     LPRECT lpr = malloc(sizeof(LPRECT));
     GetWindowRect(window, lpr);
     return *lpr;
 }
+
+/*
+    Function for creating new buttons in the window
+*/
 HWND createButton(wchar_t *text, long x, long y, long width, long height)
 {
     return CreateWindow(
@@ -28,15 +46,19 @@ HWND createButton(wchar_t *text, long x, long y, long width, long height)
         NULL);
 }
 
-void init_components(HWND m_hwnd)
+/*
+    Initialize the contents of the window
+*/
+void initializeComponents(HWND m_hwnd)
 {
-    RECT bounds = windowSize();
+    RECT bounds = getWindowSize();
     long width = bounds.right - bounds.left;
     long height = bounds.bottom - bounds.top;
     long offset = 300;
     long offset_y = 151;
 
-    okbutton = createButton(L"Ok", width - offset, height - offset_y, 100l, 100l);
+    shiftRightButton = createButton(L"Shift Right", width - offset, height - offset_y, 100l, 100l);
+    shiftLeftButton = createButton(L"Shift Left", width-offset-110l, height- offset_y, 100l,100l);
     cancelbutton = createButton(L"Close Application", width - offset + 10l + 100l, height - offset_y, 130l, 100l);
 
     text = CreateWindowW(
@@ -79,9 +101,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 0;
     }
     ShowWindow(window, SW_SHOWDEFAULT);
-    init_components(window);
+    initializeComponents(window);
     UpdateWindow(window);
-    
+
     // Run the message loop.
     MSG msg = {};
     while (GetMessage(&msg, NULL, 0, 0))
@@ -92,21 +114,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     return 0;
 }
 
+/*
+    Handling button events
+*/
 void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    if ((HWND)lParam == okbutton)
+    if ((HWND)lParam == shiftRightButton)
     {
-
-        long outLength = GetWindowTextLength(text) + 1;
-        wchar_t *tex = GlobalAlloc(GPTR, outLength * sizeof(wchar_t));
-        GetWindowText(text, tex, outLength);
-
-        for (size_t i = 0; i < outLength; i++)
-        {
-            tex[i] = (wchar_t)(tex[i] + 1);
-        }
-
-        SetWindowText(text, tex);
+        ShiftTextInTextfield(text,1);
+    }
+    if ((HWND)lParam == shiftLeftButton){
+        ShiftTextInTextfield(text,-1);
     }
     if ((HWND)lParam == cancelbutton)
     {
@@ -114,6 +132,9 @@ void ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 }
 
+/*
+    Main application message loop
+*/
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     wchar_t msg[32];
@@ -127,14 +148,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ButtonProc(hwnd, uMsg, wParam, lParam);
         }
     }
-
+    break;
     case WM_CREATE:
         break;
 
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
-
+        break;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -146,7 +167,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         return 0;
     }
-
+    break;
     case WM_SIZING:
         break;
     }
